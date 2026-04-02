@@ -1,0 +1,363 @@
+---
+interface Props {
+  lang?: string;
+}
+
+const { lang = 'de' } = Astro.props;
+
+const isDE = lang === 'de';
+
+const mainSite = 'https://ohara.systems';
+
+const productsDE = [
+  { label: 'Model Prism', href: `${mainSite}/products/model-prism`, badge: 'v1.0', badgeColor: 'emerald' },
+  { label: 'Agent Atlas', href: `${mainSite}/products/agent-atlas`, badge: 'Soon', badgeColor: 'amber' },
+  { label: 'Agent Forge', href: `${mainSite}/products/agent-forge`, badge: 'Soon', badgeColor: 'amber' },
+  { label: 'Prompt Flux',  href: `${mainSite}/products/prompt-flux`,  badge: 'Soon', badgeColor: 'amber' },
+];
+
+const productsEN = [
+  { label: 'Model Prism', href: `${mainSite}/en/products/model-prism`, badge: 'v1.0', badgeColor: 'emerald' },
+  { label: 'Agent Atlas', href: `${mainSite}/en/products/agent-atlas`, badge: 'Soon', badgeColor: 'amber' },
+  { label: 'Agent Forge', href: `${mainSite}/en/products/agent-forge`, badge: 'Soon', badgeColor: 'amber' },
+  { label: 'Prompt Flux',  href: `${mainSite}/en/products/prompt-flux`,  badge: 'Soon', badgeColor: 'amber' },
+];
+
+const products = isDE ? productsDE : productsEN;
+const productsOverview = isDE ? `${mainSite}/products` : `${mainSite}/en/products`;
+
+const docsSite = 'https://docs.ohara.systems';
+
+const docsLinks = [
+  { label: 'Model Prism', href: `${docsSite}/model-prism`, badge: 'v1.0', badgeColor: 'emerald' },
+  { label: 'Agent Atlas', href: `${docsSite}/agent-atlas`, badge: 'Soon', badgeColor: 'amber' },
+  { label: 'Agent Forge', href: `${docsSite}/agent-forge`, badge: 'Soon', badgeColor: 'amber' },
+  { label: 'Prompt Flux',  href: `${docsSite}/prompt-flux`,  badge: 'Soon', badgeColor: 'amber' },
+];
+
+const docsOverview = docsSite;
+
+const navLinks = isDE
+  ? [
+      { label: 'Blog',           href: '/',                              icon: '/blog-logo.svg', active: true },
+      { label: 'Kurse',          href: `${mainSite}/courses` },
+      { label: 'Best Practices', href: `${mainSite}/best-practices` },
+    ]
+  : [
+      { label: 'Blog',           href: '/en/',                           icon: '/blog-logo.svg', active: true },
+      { label: 'Courses',        href: `${mainSite}/en/courses` },
+      { label: 'Best Practices', href: `${mainSite}/en/best-practices` },
+    ];
+
+const currentPath = Astro.url.pathname;
+const deHref = currentPath.startsWith('/en') ? currentPath.replace(/^\/en/, '') || '/' : currentPath;
+const enHref = currentPath.startsWith('/en') ? currentPath : '/en' + (currentPath === '/' ? '' : currentPath);
+---
+
+<header class="sticky top-0 z-50 border-b border-white/10 bg-[#0a0a0f]/80 backdrop-blur-md">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+
+    <!-- Logo -->
+    <a href={mainSite} class="flex items-center gap-3 group">
+      <img
+        src="/ohara-systems-logo.svg"
+        height="32"
+        width="32"
+        alt="ohara.systems logo"
+        class="h-8 w-8"
+      />
+      <span class="text-lg font-semibold tracking-tight text-white group-hover:text-[#38bdf8] transition-colors duration-200">
+        ohara.systems
+      </span>
+    </a>
+
+    <!-- Nav links (desktop) -->
+    <ul class="hidden md:flex items-center gap-8">
+
+      <!-- Products dropdown -->
+      <li class="relative group/products">
+        <a
+          href={productsOverview}
+          class="flex items-center gap-1 text-sm text-white/60 hover:text-white transition-colors duration-200 py-2"
+        >
+          {isDE ? 'Produkte' : 'Products'}
+          <svg class="h-3.5 w-3.5 opacity-50 group-hover/products:opacity-100 transition-all duration-200 group-hover/products:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </a>
+
+        <!-- Dropdown panel -->
+        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 pointer-events-none group-hover/products:opacity-100 group-hover/products:pointer-events-auto transition-all duration-200 translate-y-1 group-hover/products:translate-y-0">
+          <div class="w-56 rounded-xl border border-white/10 bg-[#0e0e16]/95 backdrop-blur-xl shadow-2xl shadow-black/40 p-1.5">
+
+            <a href={productsOverview}
+              class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-white/40 hover:text-white/70 hover:bg-white/5 transition-all duration-150 mb-1">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>
+              {isDE ? 'Alle Produkte' : 'All Products'}
+            </a>
+
+            <div class="h-px bg-white/8 mx-2 mb-1"></div>
+
+            {products.map((p) => (
+              <a
+                href={p.href}
+                class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-150"
+              >
+                <span>{p.label}</span>
+                <span class={`text-xs px-1.5 py-0.5 rounded-full ${
+                  p.badgeColor === 'emerald'
+                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                    : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                }`}>{p.badge}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </li>
+
+      <!-- Docs dropdown -->
+      <li class="relative group/docs">
+        <a
+          href={docsOverview}
+          class="flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors duration-200 py-2"
+        >
+          <img src="/docs-logo.svg" width="16" height="16" alt="" class="h-4 w-4 opacity-60" />
+          Docs
+          <svg class="h-3.5 w-3.5 opacity-50 group-hover/docs:opacity-100 transition-all duration-200 group-hover/docs:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </a>
+
+        <!-- Dropdown panel -->
+        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 pointer-events-none group-hover/docs:opacity-100 group-hover/docs:pointer-events-auto transition-all duration-200 translate-y-1 group-hover/docs:translate-y-0">
+          <div class="w-56 rounded-xl border border-white/10 bg-[#0e0e16]/95 backdrop-blur-xl shadow-2xl shadow-black/40 p-1.5">
+
+            <a href={docsOverview}
+              class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-white/40 hover:text-white/70 hover:bg-white/5 transition-all duration-150 mb-1">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>
+              {isDE ? 'Alle Docs' : 'All Docs'}
+            </a>
+
+            <div class="h-px bg-white/8 mx-2 mb-1"></div>
+
+            {docsLinks.map((d) => (
+              <a
+                href={d.href}
+                class="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-150"
+              >
+                <span>{d.label}</span>
+                <span class={`text-xs px-1.5 py-0.5 rounded-full ${
+                  d.badgeColor === 'emerald'
+                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                    : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                }`}>{d.badge}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </li>
+
+      <!-- Other nav links -->
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class={`flex items-center gap-1.5 text-sm transition-colors duration-200 ${
+              link.active ? 'text-white font-medium' : 'text-white/60 hover:text-white'
+            }`}
+          >
+            {link.icon && <img src={link.icon} width="16" height="16" alt="" class="h-4 w-4 opacity-60" />}
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Language switcher + CTA + Mobile menu button -->
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-1 text-sm">
+        <a
+          href={deHref}
+          onclick="sessionStorage.setItem('lang-manual','1')"
+          class={`px-2 py-1 rounded transition-colors duration-200 ${
+            !currentPath.startsWith('/en')
+              ? 'text-white font-semibold'
+              : 'text-white/40 hover:text-white/70'
+          }`}
+        >
+          DE
+        </a>
+        <span class="text-white/20">/</span>
+        <a
+          href={enHref}
+          onclick="sessionStorage.setItem('lang-manual','1')"
+          class={`px-2 py-1 rounded transition-colors duration-200 ${
+            currentPath.startsWith('/en')
+              ? 'text-white font-semibold'
+              : 'text-white/40 hover:text-white/70'
+          }`}
+        >
+          EN
+        </a>
+      </div>
+
+      <a
+        href="mailto:ai@ohara.systems"
+        class="hidden md:inline-flex items-center gap-2 border border-white/20 text-white/80 text-sm px-4 py-2 rounded-lg hover:border-white/40 hover:text-white transition-all duration-200"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+        Contact
+      </a>
+
+      <a
+        href="https://github.com/ohara-systems"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hidden md:inline-flex items-center gap-2 border border-white/20 text-white/80 text-sm px-4 py-2 rounded-lg hover:border-white/40 hover:text-white transition-all duration-200"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+        GitHub
+      </a>
+
+      <!-- Mobile menu button -->
+      <button
+        id="mobile-menu-btn"
+        class="md:hidden p-2 text-white/60 hover:text-white transition-colors"
+        aria-label="Menu"
+        aria-expanded="false"
+      >
+        <svg id="icon-open"  width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        <svg id="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="hidden"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-white/8 bg-[#0a0a0f]">
+    <div class="px-6 py-4 space-y-1">
+
+      <!-- Products section -->
+      <div>
+        <button
+          id="mobile-products-btn"
+          class="flex items-center justify-between w-full px-3 py-2.5 text-sm text-white/60 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+        >
+          <span>{isDE ? 'Produkte' : 'Products'}</span>
+          <svg id="mobile-products-chevron" class="h-4 w-4 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div id="mobile-products-submenu" class="hidden pl-4 mt-1 space-y-1 border-l border-white/8 ml-3">
+          <a href={productsOverview} class="block px-3 py-2 text-xs text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/5">
+            {isDE ? 'Alle Produkte' : 'All Products'}
+          </a>
+          {products.map((p) => (
+            <a href={p.href} class="flex items-center justify-between px-3 py-2 text-sm text-white/60 hover:text-white transition-colors rounded-lg hover:bg-white/5">
+              <span>{p.label}</span>
+              <span class={`text-xs px-1.5 py-0.5 rounded-full ${
+                p.badgeColor === 'emerald'
+                  ? 'bg-emerald-500/10 text-emerald-400'
+                  : 'bg-amber-500/10 text-amber-400'
+              }`}>{p.badge}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Docs section -->
+      <div>
+        <button
+          id="mobile-docs-btn"
+          class="flex items-center justify-between w-full px-3 py-2.5 text-sm text-white/60 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+        >
+          <span class="flex items-center gap-2">
+            <img src="/docs-logo.svg" width="16" height="16" alt="" class="h-4 w-4 opacity-60" />
+            Docs
+          </span>
+          <svg id="mobile-docs-chevron" class="h-4 w-4 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div id="mobile-docs-submenu" class="hidden pl-4 mt-1 space-y-1 border-l border-white/8 ml-3">
+          <a href={docsOverview} class="block px-3 py-2 text-xs text-white/40 hover:text-white/70 transition-colors rounded-lg hover:bg-white/5">
+            {isDE ? 'Alle Docs' : 'All Docs'}
+          </a>
+          {docsLinks.map((d) => (
+            <a href={d.href} class="flex items-center justify-between px-3 py-2 text-sm text-white/60 hover:text-white transition-colors rounded-lg hover:bg-white/5">
+              <span>{d.label}</span>
+              <span class={`text-xs px-1.5 py-0.5 rounded-full ${
+                d.badgeColor === 'emerald'
+                  ? 'bg-emerald-500/10 text-emerald-400'
+                  : 'bg-amber-500/10 text-amber-400'
+              }`}>{d.badge}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Other links -->
+      {navLinks.map((link) => (
+        <a href={link.href} class={`flex items-center gap-2 px-3 py-2.5 text-sm transition-colors rounded-lg hover:bg-white/5 ${
+          link.active ? 'text-white font-medium' : 'text-white/60 hover:text-white'
+        }`}>
+          {link.icon && <img src={link.icon} width="16" height="16" alt="" class="h-4 w-4 opacity-60" />}
+          {link.label}
+        </a>
+      ))}
+
+      <div class="pt-3 border-t border-white/8">
+        <a
+          href="mailto:ai@ohara.systems"
+          class="flex items-center gap-2 px-3 py-2.5 text-sm text-white/60 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Contact
+        </a>
+        <a
+          href="https://github.com/ohara-systems"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center gap-2 px-3 py-2.5 text-sm text-white/60 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('icon-open');
+  const iconClose = document.getElementById('icon-close');
+
+  menuBtn?.addEventListener('click', () => {
+    const isOpen = !mobileMenu?.classList.contains('hidden');
+    mobileMenu?.classList.toggle('hidden', isOpen);
+    iconOpen?.classList.toggle('hidden', !isOpen);
+    iconClose?.classList.toggle('hidden', isOpen);
+    menuBtn.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  const productsBtn = document.getElementById('mobile-products-btn');
+  const productsSubmenu = document.getElementById('mobile-products-submenu');
+  const productsChevron = document.getElementById('mobile-products-chevron');
+
+  productsBtn?.addEventListener('click', () => {
+    const isOpen = !productsSubmenu?.classList.contains('hidden');
+    productsSubmenu?.classList.toggle('hidden', isOpen);
+    productsChevron?.classList.toggle('rotate-180', !isOpen);
+  });
+
+  const docsBtn = document.getElementById('mobile-docs-btn');
+  const docsSubmenu = document.getElementById('mobile-docs-submenu');
+  const docsChevron = document.getElementById('mobile-docs-chevron');
+
+  docsBtn?.addEventListener('click', () => {
+    const isOpen = !docsSubmenu?.classList.contains('hidden');
+    docsSubmenu?.classList.toggle('hidden', isOpen);
+    docsChevron?.classList.toggle('rotate-180', !isOpen);
+  });
+</script>

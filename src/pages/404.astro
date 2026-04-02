@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="404 — Seite nicht gefunden | ohara.systems Blog" description="Diese Seite existiert nicht." lang="de">
+  <section class="px-6 py-32 md:py-48 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[60vh]">
+
+    <!-- Stars background -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      {Array.from({ length: 40 }).map((_, i) => (
+        <div
+          class="absolute rounded-full bg-white"
+          style={`width: ${1 + Math.random() * 2}px; height: ${1 + Math.random() * 2}px; top: ${Math.random() * 100}%; left: ${Math.random() * 100}%; opacity: ${0.1 + Math.random() * 0.4}; animation: twinkle ${2 + Math.random() * 3}s ease-in-out infinite alternate; animation-delay: ${Math.random() * 3}s;`}
+        />
+      ))}
+    </div>
+
+    <!-- 404 text -->
+    <h1 class="text-8xl md:text-9xl font-bold tracking-tighter bg-gradient-to-r from-[#38bdf8] via-[#818cf8] to-[#e879f9] bg-clip-text text-transparent mb-6 relative z-10">
+      404
+    </h1>
+
+    <p class="text-white/50 text-lg mb-10 relative z-10">
+      Diese Seite existiert leider nicht.
+    </p>
+
+    <a
+      href="/"
+      class="relative z-10 inline-flex items-center gap-2 border border-white/20 text-white text-sm px-6 py-3 rounded-lg hover:border-white/40 hover:bg-white/5 transition-all duration-200"
+    >
+      &larr; Zur&uuml;ck zum Blog
+    </a>
+  </section>
+
+  <style>
+    @keyframes twinkle {
+      0% { opacity: 0.1; }
+      100% { opacity: 0.6; }
+    }
+  </style>
+</Base>
