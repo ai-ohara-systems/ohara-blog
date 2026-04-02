@@ -1,0 +1,91 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: string;
+  tag?: string;
+  tagColor?: string;
+  date?: string;
+  readTime?: string;
+  author?: string;
+  canonicalPath?: string;
+  alternatePath?: string;
+}
+
+const {
+  title,
+  description,
+  lang = 'de',
+  tag,
+  tagColor = '#38bdf8',
+  date,
+  readTime,
+  author = 'ohara.systems Team',
+  canonicalPath,
+  alternatePath,
+} = Astro.props;
+
+const backHref = lang === 'de' ? '/' : '/en/';
+const backLabel = lang === 'de' ? '\u2190 Alle Artikel' : '\u2190 All articles';
+---
+
+<Base title={`${title} | ohara.systems Blog`} description={description} lang={lang} canonicalPath={canonicalPath} alternatePath={alternatePath}>
+  <article class="px-6 py-20 md:py-28">
+    <div class="mx-auto max-w-3xl">
+      <!-- Back link -->
+      <a href={backHref} class="inline-flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors mb-10">
+        {backLabel}
+      </a>
+
+      <!-- Meta -->
+      <div class="flex flex-wrap items-center gap-3 mb-6">
+        {tag && (
+          <span
+            class="rounded-full px-2.5 py-0.5 text-xs font-medium border"
+            style={`color: ${tagColor}; background-color: ${tagColor}15; border-color: ${tagColor}30`}
+          >
+            {tag}
+          </span>
+        )}
+        {date && <time class="text-xs text-white/30">{date}</time>}
+        {readTime && <span class="text-xs text-white/30">{readTime}</span>}
+      </div>
+
+      <!-- Title -->
+      <h1 class="text-3xl font-bold tracking-tight text-white md:text-4xl mb-6 leading-snug">
+        {title}
+      </h1>
+
+      <p class="text-white/50 text-lg leading-relaxed mb-10 pb-10 border-b border-white/10">
+        {description}
+      </p>
+
+      <!-- Content -->
+      <div class="prose prose-invert prose-sm max-w-none
+        prose-headings:text-white prose-headings:font-bold prose-headings:tracking-tight
+        prose-p:text-white/70 prose-p:leading-relaxed
+        prose-a:text-[#38bdf8] prose-a:no-underline hover:prose-a:underline
+        prose-code:text-[#38bdf8] prose-code:bg-white/5 prose-code:px-1 prose-code:rounded
+        prose-pre:bg-[#111118] prose-pre:border prose-pre:border-white/10 prose-pre:rounded-xl
+        prose-strong:text-white
+        prose-li:text-white/70
+        prose-hr:border-white/10
+      ">
+        <slot />
+      </div>
+
+      <!-- Author -->
+      <div class="mt-16 pt-8 border-t border-white/10 flex items-center gap-4">
+        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-[#38bdf8]/30 to-[#818cf8]/30 border border-white/10 flex items-center justify-center text-sm font-semibold text-white">
+          O
+        </div>
+        <div>
+          <div class="text-sm font-medium text-white">{author}</div>
+          <div class="text-xs text-white/40">ohara.systems</div>
+        </div>
+      </div>
+    </div>
+  </article>
+</Base>

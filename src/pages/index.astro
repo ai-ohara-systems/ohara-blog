@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog', ({ data }) => data.lang === 'de'))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+---
+
+<Base title="Blog — ohara.systems" description="KI-Infrastruktur Insights — LLMOps, Routing, Kostenoptimierung und mehr." lang="de">
+  <section class="px-6 py-24 md:py-32">
+    <div class="mx-auto max-w-5xl">
+      <div class="mb-16 text-center">
+        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs text-white/50 mb-6">
+          <img src="/blog-logo.svg" alt="" class="h-4 w-4" />
+          ohara Blog
+        </div>
+        <h1 class="text-4xl font-bold tracking-tight text-white md:text-5xl mb-4">Neuigkeiten</h1>
+        <p class="text-lg text-white/50 max-w-2xl mx-auto">
+          Aktuelles aus der Praxis — LLMOps, Routing, Kostenoptimierung und mehr.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map(post => {
+          const slug = post.id.replace('de/', '');
+          return (
+            <article class="rounded-xl border border-white/10 bg-[#111118] p-6 hover:border-white/20 transition-all duration-300 flex flex-col">
+              <div class="flex items-center gap-3 mb-4">
+                <span
+                  class="rounded-full px-2.5 py-0.5 text-xs font-medium border"
+                  style={`color:${post.data.tagColor};background-color:${post.data.tagColor}15;border-color:${post.data.tagColor}30`}
+                >
+                  {post.data.tag}
+                </span>
+                <time class="text-xs text-white/30">{post.data.date}</time>
+              </div>
+              <h2 class="text-lg font-semibold text-white leading-snug mb-3">{post.data.title}</h2>
+              <p class="text-sm text-white/50 leading-relaxed flex-1">{post.data.description}</p>
+              <a href={`/${slug}`} class="mt-5 text-sm text-[#38bdf8] hover:text-[#7dd3fc] transition-colors inline-flex items-center gap-1">
+                Weiterlesen
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Base>
